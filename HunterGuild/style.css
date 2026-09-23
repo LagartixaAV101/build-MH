@@ -1,0 +1,184 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    color: #222;
+}
+
+/* Cabeçalho */
+
+header {
+    height: 70px;
+    background: #181818;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 40px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav button {
+    background: #ffffff;
+    border: none;
+    border-radius: 5px;
+
+    padding: 10px 20px;
+
+    cursor: pointer;
+}
+
+/* Conteúdo */
+
+main {
+    padding: 50px;
+}
+
+/* =========================
+   MODAL
+   ========================= */
+
+.modal {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1000;
+}
+
+/* Quando o modal estiver aberto */
+
+.modal.aberto {
+    display: flex;
+}
+
+
+/* Caixa de login */
+
+.login-box {
+    width: 400px;
+    max-width: 90%;
+
+    background: white;
+
+    border-radius: 10px;
+
+    padding: 35px;
+
+    position: relative;
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+
+/* Botão X */
+
+.fechar {
+    position: absolute;
+
+    top: 10px;
+    right: 15px;
+
+    border: none;
+    background: none;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+    color: #555;
+}
+
+
+/* Formulário */
+
+.login-box label {
+    display: block;
+
+    margin-bottom: 7px;
+    margin-top: 15px;
+}
+
+.login-box input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    font-size: 16px;
+}
+
+
+/* Botão de login */
+
+.botao-login {
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 13px;
+
+    border: none;
+    border-radius: 5px;
+
+    background: #222;
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.botao-login:hover {
+    background: #444;
+}
+
+
+/* Cadastro */
+
+.cadastro {
+    text-align: center;
+
+    margin-top: 25px;
+
+    font-size: 14px;
+}
+
+.cadastro a {
+    color: #0066cc;
+}
