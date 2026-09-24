@@ -3,30 +3,33 @@ CREATE DATABASE IF NOT EXISTS mhWilds
 	COLLATE utf8mb4_unicode_ci;
 USE mhWilds;
 
+--tabela que guarda qual a versao atual do jogo
 CREATE TABLE versions(
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	version VARCHAR(30) NOT NULL UNIQUE,
-	nome VARCHAR(100) NOT NULL,
-	data_ DATE NULL,
-	active boolean NOT NULL DEFAULT TRUE
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, --incrementa o id automatico||nao vai ter duas linhas com id 11
+	version VARCHAR(30) NOT NULL UNIQUE, 
+	descricao VARCHAR(100) NOT NULL,
+	data_ DATE NULL,--data em que a versao foi lançada
+	active boolean NOT NULL DEFAULT TRUE --diz se a versão ainda é a atual
 );
 
+--tabela de usuarios
 CREATE TABLE users(
 	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	user VARCHAR(50) NOT NULL UNIQUE,
 	email VARCHAR(255) NOT NULL UNIQUE,
-	hash_senha VARCHAR(255) NOT NULL,
-	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	hash_senha VARCHAR(255) NOT NULL,--ao inves de guardar a senha diretamente guarda o hash dela pq é mais seguro 
+	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,--coloca data e hora
 	atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 
-	ON UPDATE CURRENT_TIMESTAMP
+	ON UPDATE CURRENT_TIMESTAMP --atualiza o timestamp automaticamente quando alterar algo na linha
 );
 
+--tabela separando os tipo de equipamentos, facilita pra listar só as armas por exemplo, ja q todas vao ter o mesmo id 'pai'
 CREATE TABLE tipo_equip(
 	id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	nome VARCHAR(50) NOT NULL UNIQUE
 );
-INSERT INTO tipo_equip (nome) VALUES ('arma'), ('armadura'), ('charm'), ('decos');
+INSERT INTO tipo_equip (nome) VALUES ('armas'), ('armadura'), ('charm'), ('decos');
 
 CREATE TABLE equipamentos(
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -34,65 +37,54 @@ CREATE TABLE equipamentos(
 	descricao TEXT,
 	tipo_equip_id TINYINT UNSIGNED NOT NULL,
 	raridade TINYINT UNSIGNED NULL,
-	game_id BIGINT UNSIGNED NULL,
-	version_id INT UNSIGNED NULL,
-	criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-	FOREIGN KEY (tipo_equip_id)
+	FOREIGN KEY (tipo_equip_id)--faz a ligação entre as tabelas
 		REFERENCES tipo_equip(id),
 
-	FOREIGN KEY (version_id)
-		REFERENCES versions(id),
-
-	INDEX idx_equipment_type (equipment_type_id),
-	INDEX idx_equipment_name (name)
+	INDEX idx_tipo_equip (tipo_equip_id),
+	INDEX idx_equip_nome (nome) --cria indices para facilitar buscas, seja no site ou no proprio DB. tipo indice de livro
 );
 
-CREATE TABLE weapons (
-    equipment_id INT UNSIGNED PRIMARY KEY,
-
-    weapon_type VARCHAR(50) NOT NULL,
-
-    attack INT UNSIGNED NOT NULL DEFAULT 0,
-    affinity SMALLINT NOT NULL DEFAULT 0,
-
-    defense_bonus SMALLINT NOT NULL DEFAULT 0,
-
+CREATE TABLE armas(
+    equip_id INT UNSIGNED PRIMARY KEY,
+    tipo_arma VARCHAR(50) NOT NULL,
+    ataque INT UNSIGNED NOT NULL DEFAULT 0,
+    afinidade SMALLINT NOT NULL DEFAULT 0,
+    bonus_defesa SMALLINT NOT NULL DEFAULT 0,
     elderseal VARCHAR(30) NULL,
 
-    FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
-        ON DELETE CASCADE
+    FOREIGN KEY (equip_id)
+        REFERENCES equipamentos(id)
+        ON DELETE CASCADE --faz com que caso algo seja deletado de 'equipamentos' seja deletado aq tbm
 );
 
-CREATE TABLE weapon_elements (
+CREATE TABLE dano_elemental(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id_arma INT UNSIGNED NOT NULL,
 
-    weapon_id INT UNSIGNED NOT NULL,
-
-    element_type ENUM(
-        'fire',
-        'water',
-        'thunder',
-        'ice',
-        'dragon',
+    elemento ENUM(
+        'fogo',
+        'agua',
+        'raio',
+        'gelo',
+        'dragao',
         'poison',
-        'paralysis',
+        'paralisisa',
         'sleep',
         'blast'
     ) NOT NULL,
 
-    value INT NOT NULL DEFAULT 0,
+    dano INT NOT NULL DEFAULT 0,
 
-    FOREIGN KEY (weapon_id)
-        REFERENCES weapons(equipment_id)
+    FOREIGN KEY (id_arma)
+        REFERENCES armas(equip_id)
         ON DELETE CASCADE,
 
-    INDEX idx_weapon_element (weapon_id)
+    INDEX idx_elemento (id_arma)
 );
 
-CREATE TABLE weapon_sharpness (
-    weapon_id INT UNSIGNED PRIMARY KEY,
+CREATE TABLE sharpness(
+    id_arma INT UNSIGNED PRIMARY KEY,
 
     red INT UNSIGNED NOT NULL DEFAULT 0,
     orange INT UNSIGNED NOT NULL DEFAULT 0,
@@ -102,15 +94,15 @@ CREATE TABLE weapon_sharpness (
     white INT UNSIGNED NOT NULL DEFAULT 0,
     purple INT UNSIGNED NOT NULL DEFAULT 0,
 
-    FOREIGN KEY (weapon_id)
-        REFERENCES weapons(equipment_id)
+    FOREIGN KEY (id_arma)
+        REFERENCES armas(equip_id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE armor (
-    equipment_id INT UNSIGNED PRIMARY KEY,
+CREATE TABLE armadura(
+    equip_id INT UNSIGNED PRIMARY KEY,
 
-    armor_kind ENUM(
+    armor_type ENUM(
         'head',
         'chest',
         'arms',
@@ -118,38 +110,33 @@ CREATE TABLE armor (
         'legs'
     ) NOT NULL,
 
-    defense_base SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    defense_max SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    defesa SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    
+    fogo TINYINT NOT NULL DEFAULT 0,
+    agua TINYINT NOT NULL DEFAULT 0,
+    trovao TINYINT NOT NULL DEFAULT 0,
+    gelo TINYINT NOT NULL DEFAULT 0,
+    dragao TINYINT NOT NULL DEFAULT 0,
 
-    fire TINYINT NOT NULL DEFAULT 0,
-    water TINYINT NOT NULL DEFAULT 0,
-    thunder TINYINT NOT NULL DEFAULT 0,
-    ice TINYINT NOT NULL DEFAULT 0,
-    dragon TINYINT NOT NULL DEFAULT 0,
-
-    FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
+    FOREIGN KEY (equip_id)
+        REFERENCES equipamentos(id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE skills (
+--tabela com as skills do jogo e qual o nivel maximo delas, e.q attack boost lvl 7
+CREATE TABLE skills(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
-    name VARCHAR(120) NOT NULL UNIQUE,
-
-    description TEXT,
-
+    nome VARCHAR(120) NOT NULL UNIQUE,
+    descricao TEXT,
     max_level TINYINT UNSIGNED NOT NULL DEFAULT 1
 );
 
-CREATE TABLE skill_levels (
+--tabela com os niveis individuais de cada skill
+CREATE TABLE skill_levels(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
     skill_id INT UNSIGNED NOT NULL,
-
     level TINYINT UNSIGNED NOT NULL,
-
-    description TEXT NOT NULL,
+    descricao TEXT NOT NULL,
 
     FOREIGN KEY (skill_id)
         REFERENCES skills(id)
@@ -158,16 +145,16 @@ CREATE TABLE skill_levels (
     UNIQUE (skill_id, level)
 );
 
-CREATE TABLE equipment_skills (
-    equipment_id INT UNSIGNED NOT NULL,
+--tabela que liga as skill e equipamentos, talvez eu apague se der td certo no hmtl
+CREATE TABLE skills_equip(
+    equip_id INT UNSIGNED NOT NULL,
     skill_id INT UNSIGNED NOT NULL,
-
     level TINYINT UNSIGNED NOT NULL DEFAULT 1,
 
-    PRIMARY KEY (equipment_id, skill_id),
-
-    FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
+    PRIMARY KEY (equip_id, skill_id), --faz com q a chave primaria tenha 2 fatores
+    								  --pode ter dois itens com o memso equip_id desde q o skill_id seja diferente e vice-versa
+    FOREIGN KEY (equip_id)
+        REFERENCES equipamentos(id)
         ON DELETE CASCADE,
 
     FOREIGN KEY (skill_id)
@@ -175,78 +162,68 @@ CREATE TABLE equipment_skills (
         ON DELETE CASCADE
 );
 
-CREATE TABLE equipment_slots (
+CREATE TABLE slots_equip(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
-    equipment_id INT UNSIGNED NOT NULL,
-
-    slot_position TINYINT UNSIGNED NOT NULL,
-
+    equip_id INT UNSIGNED NOT NULL,
+    slot_equip TINYINT UNSIGNED NOT NULL,--diz ql equipamento ta o slot de deco
     slot_level TINYINT UNSIGNED NOT NULL,
 
-    FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
+    FOREIGN KEY (equip_id)
+        REFERENCES equipamentos(id)
         ON DELETE CASCADE,
 
-    UNIQUE (equipment_id, slot_position),
-
-    INDEX idx_equipment_slots (equipment_id)
+    UNIQUE (equipment_id, slot_equip), --mesmo caso da declaração de primary key separada
+    									  --uma das condições pode se repetir, mas nao as duas
+    INDEX idx_slot_equip (equipment_id)
 );
 
-CREATE TABLE decorations (
-    equipment_id INT UNSIGNED PRIMARY KEY,
-
+--tabela com as decos 
+CREATE TABLE decorations(
+    equip_id INT UNSIGNED PRIMARY KEY,
     slot_level TINYINT UNSIGNED NOT NULL,
 
-    FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
+    FOREIGN KEY (equip_id)
+        REFERENCES equipamentos(id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE charms (
-    equipment_id INT UNSIGNED PRIMARY KEY,
+CREATE TABLE charms(
+    equip_id INT UNSIGNED PRIMARY KEY,
 
-    FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
+    FOREIGN KEY (equip_id)
+        REFERENCES equipamentos(id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE armor_sets (
+--tabela q guarda o nome dos sets e.q set de rathalos/deviljho/doshaguma
+CREATE TABLE armor_sets(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
-    name VARCHAR(120) NOT NULL,
-
-    description TEXT
+    nome VARCHAR(120) NOT NULL,
+    descricao TEXT
 );
 
-CREATE TABLE armor_set_pieces (
+CREATE TABLE armor_set_peca(
     armor_set_id INT UNSIGNED NOT NULL,
+    id_armadura INT UNSIGNED NOT NULL,
 
-    armor_id INT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (armor_set_id, armor_id),
+    PRIMARY KEY (armor_set_id, id_armadura),
 
     FOREIGN KEY (armor_set_id)
         REFERENCES armor_sets(id)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (armor_id)
-        REFERENCES armor(equipment_id)
+    FOREIGN KEY (id_armadura)
+        REFERENCES armadura(equip_id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE armor_set_bonuses (
+CREATE TABLE armor_set_bonus(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
     armor_set_id INT UNSIGNED NOT NULL,
-
     skill_id INT UNSIGNED NOT NULL,
-
-    pieces_required TINYINT UNSIGNED NOT NULL,
-
+    pecas TINYINT UNSIGNED NOT NULL,
     level TINYINT UNSIGNED NOT NULL DEFAULT 1,
-
-    description TEXT,
+    descricao TEXT,
 
     FOREIGN KEY (armor_set_id)
         REFERENCES armor_sets(id)
@@ -257,20 +234,14 @@ CREATE TABLE armor_set_bonuses (
         ON DELETE CASCADE
 );
 
-CREATE TABLE builds (
+CREATE TABLE builds(
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
     user_id BIGINT UNSIGNED NULL,
-
-    name VARCHAR(150) NOT NULL,
-
-    description TEXT,
-
-    is_public BOOLEAN NOT NULL DEFAULT FALSE,
-
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    nome VARCHAR(150) NOT NULL,
+    descricao TEXT,
+    publico BOOLEAN NOT NULL DEFAULT FALSE,--diz se a build sera publica ou nao
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (user_id)
@@ -278,12 +249,11 @@ CREATE TABLE builds (
         ON DELETE SET NULL,
 
     INDEX idx_build_user (user_id),
-    INDEX idx_build_public (is_public)
+    INDEX idx_build_publica (publico)
 );
 
-CREATE TABLE build_equipment (
+CREATE TABLE equip_build(
     build_id BIGINT UNSIGNED NOT NULL,
-
     equipment_id INT UNSIGNED NOT NULL,
 
     equipment_slot ENUM(
@@ -303,105 +273,42 @@ CREATE TABLE build_equipment (
         ON DELETE CASCADE,
 
     FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
+        REFERENCES equipamentos(id)
 );
 
-CREATE TABLE build_decorations (
+CREATE TABLE build_decos(
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
     build_id BIGINT UNSIGNED NOT NULL,
-
-    decoration_id INT UNSIGNED NOT NULL,
-
-    target_equipment_id INT UNSIGNED NOT NULL,
-
-    slot_position TINYINT UNSIGNED NOT NULL,
+    decos_id INT UNSIGNED NOT NULL,
+    equip_id INT UNSIGNED NOT NULL,
+    slot_equip TINYINT UNSIGNED NOT NULL,
 
     FOREIGN KEY (build_id)
         REFERENCES builds(id)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (decoration_id)
-        REFERENCES decorations(equipment_id),
+    FOREIGN KEY (decos_id)
+        REFERENCES decorations(equip_id),
 
-    FOREIGN KEY (target_equipment_id)
-        REFERENCES equipment(id),
+    FOREIGN KEY (equip_id)
+        REFERENCES equipamentos(id),
 
-    UNIQUE (
-        target_equipment_id,
-        slot_position
+    UNIQUE(
+        equip_id,
+        slot_equip
     ),
 
-    INDEX idx_build_decorations (build_id)
+    INDEX idx_build_decos (build_id)
 );
 
-CREATE TABLE materials (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+CREATE INDEX idx_nome_skill
+ON skills(nome);
 
-    name VARCHAR(150) NOT NULL UNIQUE,
+CREATE INDEX idx_tipo_armadura
+ON armadura(armor_type);
 
-    description TEXT
-);
+CREATE INDEX idx_tipo_arma
+ON armas(tipo_arma);
 
-CREATE TABLE equipment_materials (
-    equipment_id INT UNSIGNED NOT NULL,
-
-    material_id INT UNSIGNED NOT NULL,
-
-    quantity SMALLINT UNSIGNED NOT NULL DEFAULT 1,
-
-    PRIMARY KEY (equipment_id, material_id),
-
-    FOREIGN KEY (equipment_id)
-        REFERENCES equipment(id)
-        ON DELETE CASCADE,
-
-    FOREIGN KEY (material_id)
-        REFERENCES materials(id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE monsters (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
-    name VARCHAR(120) NOT NULL UNIQUE,
-
-    description TEXT,
-
-    species VARCHAR(100),
-
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE monster_materials (
-    monster_id INT UNSIGNED NOT NULL,
-
-    material_id INT UNSIGNED NOT NULL,
-
-    source_description TEXT,
-
-    PRIMARY KEY (monster_id, material_id),
-
-    FOREIGN KEY (monster_id)
-        REFERENCES monsters(id)
-        ON DELETE CASCADE,
-
-    FOREIGN KEY (material_id)
-        REFERENCES materials(id)
-        ON DELETE CASCADE
-);
-
-CREATE INDEX idx_skills_name
-ON skills(name);
-
-CREATE INDEX idx_armor_kind
-ON armor(armor_kind);
-
-CREATE INDEX idx_weapon_type
-ON weapons(weapon_type);
-
-CREATE INDEX idx_builds_name
-ON builds(name);
-
-CREATE INDEX idx_materials_name
-ON materials(name);
+CREATE INDEX idx_nome_build
+ON builds(nome);
