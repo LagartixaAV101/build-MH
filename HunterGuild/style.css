@@ -1,184 +1,161 @@
-* {
+*{
     box-sizing: border-box;
 }
-
-body {
+body{
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
+    background: #9c9c9c;
     color: #222;
 }
 
-/* Cabeçalho */
-
-header {
+/*Cabeçalho*/
+header{
     height: 70px;
-    background: #181818;
+    background: #4e2208;
     color: white;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 0 40px;
 }
-
-nav {
+/*header::after{
+	content: "";
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 1vw;
+	background-image: url(parts_line_header.jpg);
+}*/
+nav{
     display: flex;
     align-items: center;
     gap: 25px;
 }
-
-nav a {
+nav a{
     color: white;
     text-decoration: none;
 }
-
-nav button {
-    background: #ffffff;
+nav button{
+    background: transparent;
+    color: white;
+    font-size: 18px;
     border: none;
     border-radius: 5px;
-
     padding: 10px 20px;
-
     cursor: pointer;
 }
+.butao{
+	position: relative;
+    display: inline-block;
+	border-left: 28px;
+    border-right: 28px;
+}
+.butao::before, .butao::after{
+	content: "";
+    position: absolute;	
+    width: 18px;
+    height: 18px;
+    background-image: url(icon_astrsk.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+}
+.butao::before{
+	left: 0.1;
 
-/* Conteúdo */
+}
+.butao::after{
+	right: 5;
 
-main {
+}
+.butao:hover::before, .butao:hover::after{
+	opacity: 1;
+}
+
+/*Página Principal*/
+main{
     padding: 50px;
 }
 
-/* =========================
-   MODAL
-   ========================= */
-
-.modal {
+/*login modal*/
+.modal{
     position: fixed;
-
+	font-family: "Source Serif 4",serif;
     top: 0;
     left: 0;
-
     width: 100%;
     height: 100%;
-
     background: rgba(0, 0, 0, 0.65);
-
     display: none;
-
     align-items: center;
     justify-content: center;
-
     z-index: 1000;
 }
-
-/* Quando o modal estiver aberto */
-
-.modal.aberto {
+.modal.aberto{
     display: flex;
 }
-
-
-/* Caixa de login */
-
-.login-box {
+.caixa-login{
     width: 400px;
     max-width: 90%;
-
-    background: white;
-
+    background-image: url(missao2.png);
     border-radius: 10px;
-
     padding: 35px;
-
     position: relative;
-
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
-
-.login-box h2 {
+.caixa-login h2{
     text-align: center;
     margin-top: 0;
     margin-bottom: 30px;
 }
-
-
-/* Botão X */
-
-.fechar {
+.fechar{
     position: absolute;
-
-    top: 10px;
-    right: 15px;
-
+    top: 18px;
+    right: 20px;
     border: none;
     background: none;
-
     font-size: 30px;
-
     cursor: pointer;
-
-    color: #555;
+    color: #1f1f1f;
 }
 
-
 /* Formulário */
-
-.login-box label {
+.caixa-login label{
     display: block;
-
     margin-bottom: 7px;
     margin-top: 15px;
 }
-
-.login-box input {
+.caixa-login input{
     width: 100%;
-
     padding: 12px;
-
-    border: 1px solid #ccc;
+	background-color: transparent;
+    border: 1px solid ;
     border-radius: 5px;
-
     font-size: 16px;
 }
-
-
-/* Botão de login */
-
-.botao-login {
+.botao-login{
     width: 100%;
-
     margin-top: 25px;
-
     padding: 13px;
-
     border: none;
     border-radius: 5px;
-
     background: #222;
     color: white;
-
     font-size: 16px;
-
     cursor: pointer;
 }
-
-.botao-login:hover {
+.botao-login:hover{
     background: #444;
 }
-
-
-/* Cadastro */
-
-.cadastro {
+.cadastro{
     text-align: center;
-
     margin-top: 25px;
-
     font-size: 14px;
 }
-
-.cadastro a {
-    color: #0066cc;
+.cadastro a{
+    color: #000000;
+    text-decoration: none;
 }
