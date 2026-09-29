@@ -1,0 +1,164 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    color: #222;
+}
+
+/*Cabeçalho*/
+header{
+    height: 70px;
+    background: #4e2208;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+nav{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+nav a{
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+nav button{
+    background: transparent;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.butao{
+	position: relative;
+    display: inline-block;
+	border-left: 28px;
+    border-right: 28px;
+}
+.butao::before, .butao::after{
+	content: "";
+    position: absolute;	
+    width: 18px;
+    height: 18px;
+    background-image: url(Image/icon_astrsk.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+}
+.butao::before{
+	left: 0;
+
+}
+.butao::after{
+	right: 0;
+
+}
+.butao:hover::before, .butao:hover::after{
+	opacity: 1;
+}
+
+/*Página Principal*/
+main{
+    padding: 50px;
+}
+.builder{
+	width: 50px;
+	height: 200px;
+	background-color: #cfcfcf;
+	position: fixed;
+	font-family: "Source Serif 4",serif;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+/*login modal*/
+.modal{
+    position: fixed;
+	font-family: "Source Serif 4",serif;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal.aberto{
+    display: flex;
+}
+.caixa-login{
+    width: 400px;
+    max-width: 90%;
+    background-image: url(Image/missao2.png);
+    border-radius: 10px;
+    padding: 35px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+.caixa-login h2{
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+.fechar{
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    border: none;
+    background: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #1f1f1f;
+}
+
+/* Formulário */
+.caixa-login label{
+    display: block;
+    margin-bottom: 7px;
+    margin-top: 15px;
+}
+.caixa-login input{
+    width: 100%;
+    padding: 12px;
+	background-color: transparent;
+    border: 1px solid ;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.botao-login{
+    width: 100%;
+    margin-top: 25px;
+    padding: 13px;
+    border: none;
+    border-radius: 5px;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+.botao-login:hover{
+    background: #444;
+}
+.cadastro{
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+}
+.cadastro a{
+    color: #000000;
+    text-decoration: none;
+}
