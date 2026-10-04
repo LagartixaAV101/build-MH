@@ -1,0 +1,340 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #262626;
+    color: #222;
+}
+
+/*Cabeçalho*/
+header{
+    height: 70px;
+    background: #4e2208;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+header a{
+	color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+nav{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+nav a{
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+nav button{
+    background: transparent;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.butao{
+	position: relative;
+    display: inline-block;
+	border-left: 28px;
+    border-right: 28px;
+}
+.butao::before, .butao::after{
+	content: "";
+    position: absolute;	
+    width: 18px;
+    height: 18px;
+    background-image: url(Image/icon_astrsk.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+}
+.butao::before{
+	left: 0;
+
+}
+.butao::after{
+	right: 0;
+
+}
+.butao:hover::before, .butao:hover::after{
+	opacity: 1;
+}
+
+/*Página Principal*/
+main{
+    padding: 50px;
+}
+main h2, main h4{
+	color: white;
+	justify-content: center;
+}
+.builder{
+	width: 300px;
+	height: 500px;
+	background-color: #1c1c1c;
+	border-radius: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -45%);
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	flex-direction: column;
+}
+.armor{
+    width: 70px;
+    height: 50px;
+    padding: 5px;
+    border-radius: 5px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.status{
+    width: 300px;
+    min-height: 400px;
+    padding: 25px;
+    background-color: #1c1c1c;
+    font-family: "Source Serif 4",serif;
+    color: white;
+    border-radius: 10px;
+}
+
+/*Página minha build*/
+.build{
+    padding: 0px;
+    border-radius: 5px;
+    background: transparent;
+    color: white;
+    font-size: 17px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.seletor-build {
+    margin-bottom: 0;
+}
+.seletor-build select {
+    width: 160px;
+    height: 58px;
+    padding: 5px;
+    background-color: #1c1c1c;
+    border: 2px solid #777;
+    border-radius: 5px;
+    color: white;
+    font-family: "Source Serif 4", serif;
+    font-size: 18px;
+    cursor: pointer;
+}
+/*Erro ao acessar suas builds sem login*/
+.mensagem-erro {
+    position: fixed;
+    top: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    background: #6b1f1f;
+    color: white;
+    border: 1px solid #a94442;
+    border-radius: 5px;
+    z-index: 2000;
+}
+
+/*Página Comunidade*/
+.lista-builds{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    gap: 30px;
+}
+.card-build{
+    min-height: 240px;
+    padding: 25px;
+    border: 1px solid #716957;
+    background: #202020;
+    display: flex;
+    flex-direction: column;
+}
+.card-build h2{
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+.card-build p{
+    color: #bdb5a4;
+    margin-bottom: 10px;
+}
+.card-build .autor{
+    margin-bottom: 5px;
+}
+.card-build .data{
+    margin-bottom: auto;
+}
+.card-build strong{
+    color: #e8e0ce;
+}
+.botao-selecionar{
+    display: block;
+    width: 160px;
+    margin: 20px auto 0;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #9d927a;
+    color: #e8e0ce;
+    text-decoration: none;
+    transition: 0.2s;
+}
+.botao-selecionar:hover{
+    background: #e8e0ce;
+    color: #202020;
+}
+.nenhuma-build{
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #aaa;
+}
+
+/*login modal*/
+.modal{
+    position: fixed;
+	font-family: "Source Serif 4",serif;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal.aberto{
+    display: flex;
+}
+.caixa-login{
+    width: 400px;
+    max-width: 90%;
+    background-image: url(Image/missao2.png);
+    border-radius: 10px;
+    padding: 35px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+.caixa-login h2{
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+.fechar{
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    border: none;
+    background: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #1f1f1f;
+}
+
+/*pagina usuario logado*/
+.perfil{
+    position: relative;
+    display: inline-block;
+}
+.botao-perfil{
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+.botao-perfil img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.menu-perfil{
+    display: none;
+    position: absolute;
+    top: 55px;
+    right: 0;
+    min-width: 150px;
+    background: #222;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 8px;
+    z-index: 10000;
+}
+.menu-perfil.aberto{
+    display: flex;
+    flex-direction: column;
+}
+.menu-perfil a{
+    display: flex;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+}
+.menu-perfil a:hover{
+    background: #333;
+}
+.menu-perfil .excluir{
+    color: #ff5555;
+}
+
+/* Formulário */
+.caixa-login label{
+    display: block;
+    margin-bottom: 7px;
+    margin-top: 15px;
+}
+.caixa-login input{
+    width: 100%;
+    padding: 12px;
+	background-color: transparent;
+    border: 1px solid ;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.botao-login{
+    width: 100%;
+    margin-top: 25px;
+    padding: 13px;
+    border: none;
+    border-radius: 5px;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+.botao-login:hover{
+    background: #444;
+}
+.cadastro{
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+}
+.cadastro a{
+    color: #000000;
+    text-decoration: none;
+}
