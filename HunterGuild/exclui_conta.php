@@ -9,7 +9,7 @@
 	}
 	
 
-	if ($_SERVER["REQUEST_METHOD"] === "POST") {
+	if ($_SERVER["REQUEST_METHOD"] === "GET") {
 
     	$sql = "DELETE FROM users WHERE id = ?";
     	$stmt = $conn->prepare($sql);
