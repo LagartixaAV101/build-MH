@@ -1,38 +1,58 @@
 <?php
-	require_once "conexao.php";
+require_once "conexao.php";
 
-	if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    	$user = trim($_POST["user"] ?? "");
-    	$email = trim($_POST["email"] ?? "");
-    	$senha = $_POST["senha"] ?? "";
+    $user = trim($_POST["user"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $senha = $_POST["senha"] ?? "";
 
-    	if ($user === "" || $email === "" || $senha === "") {
-        	die("Preencha todos os campos.");
-    	}
+    if ($user === "" || $email === "" || $senha === "") {
+        die("Preencha todos os campos.");
+    }
 
-    //verifica se usuário ou e-mail já existem
-    	$sql = "SELECT id FROM users WHERE user = ? OR email = ?";
-    	$stmt = $conn->prepare($sql);
-    	$stmt->bind_param("ss", $user, $email);
-    	$stmt->execute();
+    // Verifica se usuário ou e-mail já existem
+    $sql = "SELECT id FROM users WHERE user = ? OR email = ?";
+    $stmt = $conn->prepare($sql);
 
-	    $resultado = $stmt->get_result();
+    if (!$stmt) {
+        die("Erro na preparação da consulta: " . $conn->error);
+    }
 
-    	if ($resultado->num_rows > 0) {
-        	die("Usuário ou e-mail já cadastrado.");
-    	}
+    $stmt->bind_param("ss", $user, $email);
+    $stmt->execute();
 
-    //cria o hash da senha
-    	$senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+    $resultado = $stmt->get_result();
 
-    //cadastra o usuário
-    	$sql = "INSERT INTO users (user, email, hash_senha)
+    if ($resultado->num_rows > 0) {
+        $stmt->close();
+        $conn->close();
+        die("Usuário ou e-mail já cadastrado.");
+    }
+
+    $stmt->close();
+
+    // Cria o hash da senha
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+    // Cadastra o usuário
+    $sql = "INSERT INTO users (user, email, hash_senha)
             VALUES (?, ?, ?)";
 
-    	$stmt = $conn->prepare($sql);
-    	$stmt->bind_param("sss", $user, $email, $senhaHash);
-    	$stmt->close();
-	}
-	$conn->close();
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        die("Erro na preparação da consulta: " . $conn->error);
+    }
+
+    $stmt->bind_param("sss", $user, $email, $senhaHash);
+
+    if ($stmt->execute()) {
+        echo "Usuário cadastrado com sucesso!";
+    } else {
+        echo "ERRO: " . $stmt->error;
+    } 
+}
+
+$conn->close();
 ?>
