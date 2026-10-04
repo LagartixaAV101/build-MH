@@ -3,10 +3,11 @@
 
 	require_once "conexao.php";
 
+	$user_id = $_SESSION["user_id"];
 	if (!isset($_SESSION["user_id"])) {
 	    die("Você precisa estar logado para excluir sua conta.");
 	}
-	$user_id = $_SESSION["user_id"];
+	
 
 	if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
